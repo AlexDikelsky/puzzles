@@ -2,16 +2,11 @@
 % See n_rand_elements.prolog for with replacement.
 r(_, 0, []).
 
-r([Z|NewList], N, [SelectedElement|Xs]) :-
-    N - 1 #= N1,
-    r(NewList, N1, Xs),
-
-    % Index Calculation
+r(
     length(OriginalList, Len),
     random(RandNum),
     RandomlyChosenIndex is 1 + floor(RandNum * Len),
 
-    remove(Z, OriginalList, RandomlyChosenIndex, NewList),
     nth(RandomlyChosenIndex, OriginalList, SelectedElement).
 
 
