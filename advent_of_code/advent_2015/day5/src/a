@@ -1,0 +1,38 @@
+#[macro_use]
+extern crate lazy_static;
+use std::fs;
+use regex::Regex;
+
+fn main() {
+    let contents = fs::read_to_string("day5_in.txt").unwrap();
+
+    let mut i = 0;
+    for line in contents.lines() {
+        if valid(line) {
+            i += 1;
+        }
+    }
+    dbg!(i);
+}
+
+fn part1_valid(s: &str) -> bool {
+    lazy_static!{
+        static ref regex_for_bad: regex::Regex = Regex::new("(ab)|(cd)|(pq)|(xy)").unwrap();
+    };
+
+    let ((_, vowels), (doubles, bad)) = s.chars()
+        .fold((('.', 0), (false, false)), |state, x| {
+            let ((prev_char, vowels_found), (doubles, bad)) = state;
+            let mut both = prev_char.to_string();
+            both.push(x);
+
+            ((x, if "aeiou".contains(x) { 1 + vowels_found } else { vowels_found }),
+             (doubles || (prev_char == x), bad || regex_for_bad.is_match(&both))
+            ) 
+        });
+
+    (vowels >= 3) && doubles && !bad
+}
+
+fn part2_valid(s: &str) -> bool {
+
