@@ -1,4 +1,3 @@
-# 195 is too high
 BEGIN { 
     strs["byr"] = 0;
     strs["iyr"] = 0;
