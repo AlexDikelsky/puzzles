@@ -1,0 +1,42 @@
+use std::fs;
+use regex::Regex;
+
+fn main() {
+    let contents = fs::read_to_string("day8_in.txt").unwrap();
+
+    let backslash_quote = "\\\"";
+
+    let specific_chars = Regex::new(
+        "^\"(\\\\|\\\\x\\d\\d|\\\\\"|.)\"$"
+    ).unwrap();
+
+    dbg!(&specific_chars);
+
+    let no_whitespace: String = contents.chars()
+        .map(|x| if "\n\t \r".contains(x) { "" } else { &x.to_string() })
+        .collect();
+
+    let total_num_chars = no_whitespace.len();
+    // let total_num_chars: usize = contents
+    //     .chars()
+    //     .map(|x| if "\n\t \r".contains(x) { 0 } else { 1 })
+    //     .sum();
+
+    let only_in_mem_chars = specific_chars.captures_iter(&contents).count();
+
+    for cap in specific_chars.captures_iter(&contents) {
+        dbg!(cap);
+    }
+
+    // dbg!(total_num_chars, only_in_mem_chars);
+
+}
+
+
+// #!/bin/bash
+//
+// # subtract twice wc -l because "s are counted in the second part when
+// # they shouldn't be
+// # echo $(wc -c $0) - 2 * $(wc -l $0) | sed 's/[^0-9 -]//g' | bc
+// # grep -o '(\\\\)|(x\d\d)|(\\")|(.)'
+// egrep -o '^"(\\\\|\x\d\d|\\"|.)*"' $0 | wc -l
