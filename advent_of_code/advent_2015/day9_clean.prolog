@@ -32,10 +32,6 @@ path(straylight, arbre, 127).
 %    Run part 2 with this
 % length(D, 8), fd_maximize(travel(A, B, C, D), C).
 
-% You start with no places left to visit
-% End just needs to be a valid location
-% note that this puts the starting position at the end of
-% the output list
 travel(_, Start, 0, [Start]) :-
     path(Start, _, _).
 
