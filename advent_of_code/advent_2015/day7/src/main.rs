@@ -5,11 +5,10 @@ use regex::Regex;
 use std::collections::HashMap;
 
 fn main() {
-    part1();
     part2();
 }
 
-fn part1() {
+fn part1() -> u16 {
     let unary = Regex::new(r"^(NOT) ([A-z0-9]+) -> ([A-z]+)").unwrap();
     let binary = Regex::new(
         r"^([A-z0-9]+) (OR|AND|RSHIFT|LSHIFT) ([A-z0-9]+) -> ([A-z]+)",
@@ -89,6 +88,8 @@ fn part1() {
 
     dbg!(map["a"]);
 
+    map["a"]
+
 }
 
 fn part2() {
@@ -101,7 +102,7 @@ fn part2() {
 
     let mut map: HashMap<String, u16> = HashMap::new();
 
-    map.insert("b".to_string(), 3176);
+    map.insert("b".to_string(), part1());
 
     while !map.contains_key("a") {
         let contents = fs::read_to_string("day7_in.txt").unwrap();

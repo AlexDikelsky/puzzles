@@ -28,15 +28,15 @@ path(norrath, arbre, 135).
 path(straylight, arbre, 127).
 
 %    Run part 1 with this
-% length(D, 8), fd_minimize(travel(A, B, C, D), C).
+% length(Path, 8), fd_minimize(travel(_, Distance, Path), Distance).
 %    Run part 2 with this
-% length(D, 8), fd_maximize(travel(A, B, C, D), C).
+% length(Path, 8), fd_maximize(travel(_, Distance, Path), Distance).
 
-travel(_, Start, 0, [Start]) :-
-    path(Start, _, _).
+travel(snowdin, 0, [snowdin]) :-
+    path(snowdin, _, _).
 
-travel(Start, End, Dist, [End|Visited]) :-
-    (path(Start, End, D) ; path(End, Start, D)),
-    travel(_, Start, PreviousDist, Visited),
+travel(End, TotalDistance, [End|Visited]) :-
+    (path(Start, End, DistForThisTransition) ; path(End, Start, DistForThisTransition)),
+    travel(Start, PreviousDist, Visited),
     \+member(End, Visited),
-    Dist is D + PreviousDist.
+    TotalDistance is DistForThisTransition + PreviousDist.
