@@ -38,21 +38,15 @@ RunStep ← {
 }
 
 RunStepE ← {
-  ⟨0, mask, mem⟩ RunStepE addr‿value: ⟨mask, ⟨⟨addr, ParseBin (mask MaskIt value)⟩⟩ ∾ mem⟩ ;
+  ⟨0, mask, mem⟩ RunStepE addr‿value: 
+    ⟨mask, ⟨⟨addr, ParseBin (mask MaskIt value)⟩⟩ ∾ mem⟩ ;
   ⟨1, mask, mem⟩ RunStepE newmask: ⟨newmask, mem⟩
 }
 
 # parsed ← Parse¨ •FLines "data.txt"
 parsed ← Parse¨ •FLines "testdata.bqn"
 
-# •Out •Repr Parse "mask = X100110110X011000101000101XX11001X11"
-# •Out •Repr Parse "mem[54866] = 120526"
-
 default ← Parse "mask = XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
 
-# •Out¨ •Repr¨ parsed
-h ← ⟨default, ⟨⟩⟩ RunStep 0 ⊑ parsed
-i ← h RunStep 1 ⊑ parsed
-j ← i RunStep 2 ⊑ parsed
-•Out •Repr j RunStep 3 ⊑ parsed
-# •Out ⟨2, 3⟩ RunStep "sdf"
+•Out •Repr ((((⟨default, ⟨⟩⟩ RunStep 0 ⊑ parsed) RunStep 1 ⊑ parsed) RunStep 2 ⊑ parsed) RunStep 3 ⊑ parsed)
+⟨default, ⟨⟩⟩ RunStep´ parsed

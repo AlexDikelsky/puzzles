@@ -9,7 +9,8 @@ f(x,y) = begin
     s, b = x
     if !b
         if get(s, y, "not-found") == "not-found"
-            (merge(s, Dict(y=>y)), b)
+            get!(s, y, y)
+            (s, b)
         else
             (Dict(y=>y), true)
         end
@@ -29,3 +30,4 @@ g(x) = only(Iterators.take(
                     init=(Dict(), false))), 
             1))
 
+p2_ans = g(data)
