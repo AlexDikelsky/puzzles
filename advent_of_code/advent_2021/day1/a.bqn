@@ -2,7 +2,7 @@ Parse ← {
   +´ (10 ⋆ (⌽↕≠𝕩)) × 𝕩 - '0' 
 }
 
-data ← Parse¨ •FLines "data.txt"
+data ← •BQN¨ •FLines "data.txt"
 
 p1d ← data > (∞ » data)
 p2d ← data + (∞ » data) + (⟨∞, ∞⟩ » data)

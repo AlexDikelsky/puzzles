@@ -4,14 +4,14 @@ ParseNat ← {
   +´ (10 ⋆ (⌽↕≠𝕩)) × 𝕩 - '0' 
 }
 
-ParseStart1 ← {
-  'f': ⟨ 1, 0⟩ ;
-  'd': ⟨0,  1⟩ ;
-  'u': ⟨0, ¯1⟩
+ParseLine ← {
+  (⊑ 𝕩) ∾ ParseNat (1 + 𝕩 ⊐ " ") ↓ 𝕩
 }
 
-ParseLine1 ← {
-  (ParseStart1 ⊑ 𝕩) × ParseNat (1 + 𝕩 ⊐ " ") ↓ 𝕩
+Run1 ← {
+  ⟨'f', val⟩ Run1 ⟨width, depth⟩: ⟨width + val, depth⟩ ;
+  ⟨'d', val⟩ Run1 ⟨width, depth⟩: ⟨width, depth + val⟩ ;
+  ⟨'u', val⟩ Run1 ⟨width, depth⟩: ⟨width, depth - val⟩
 }
 
 Run2 ← {
@@ -26,9 +26,6 @@ Run2 ← {
   }
 }
 
-ParseLine2 ← {
-  (⊑ 𝕩) ∾ ParseNat (1 + 𝕩 ⊐ " ") ↓ 𝕩
-}
 
-•Out ×´ +´ ParseLine1¨ data
-•Out ×´ 2 ↑ (⟨0, 0, 0⟩ Run2´ ⌽ ParseLine2¨ data)
+•Out ×´ ⟨0, 0⟩ Run1´ ParseLine¨ data
+•Out ×´ 2 ↑ (⟨0, 0, 0⟩ Run2´ ⌽ ParseLine¨ data)
