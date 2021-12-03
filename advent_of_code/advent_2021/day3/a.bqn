@@ -8,10 +8,12 @@ Filter ← {
   ⟨0, F⟩ Filter x: x ;
   ⟨y, F⟩ Filter x:
     idx ← (≠⊑x) - y
-    remaining ← ((idx ⊑ F x) = idx ⊑¨x) / x
-    ⟨(¬1 =≠ remaining) × (y - 1), F⟩ Filter remaining
+    remaining ← (((idx ⊑ F) = idx⊸⊑¨) / ⊣) x
+    ⟨(¬ 1 =≠ remaining) × (y - 1), F⟩ Filter remaining
+  ;
+  y Filter x:
+    ⟨≠⊑data, y⟩ Filter x
 }
 
-•Out •Repr ×´ ParseBin¨ ⟨Gamma data, Epsil data⟩
-
-•Out •Repr ×´ ParseBin¨ ⊑¨ ⟨⟨≠⊑data, gamma⟩ Filter data, ⟨≠⊑data, epsil⟩ Filter data⟩
+•Show ×´ ParseBin¨ ⟨Gamma data, Epsil data⟩
+•Show ×´ ParseBin¨ ⊑¨ ⟨gamma, epsil⟩ Filter¨ ⟨data, data⟩
