@@ -1,29 +1,17 @@
-ParseBin ← {
-  +´ (2 ⋆ (⌽↕≠𝕩)) × 𝕩
-}
+ParseBin ← { +´ (2 ⋆ (⌽↕≠𝕩)) × 𝕩 }
 
 data ← '1' = •FLines "data.txt"
-Gamma ← { (≠ 𝕩) ≤ 2 × +´ 𝕩 }
-Epsil ← { (≠ 𝕩) > 2 × +´ 𝕩 }
+Gamma ← ≠ ≤ (2 × +´)
+Epsil ← ≠ > (2 × +´)
 
-A ← {
-  0 A x: x ;
-  y A x:
-    oxy ← Gamma x
-    idx ← (≠⊑data) - y
-    value ← ((idx⊑oxy) = idx ⊑¨x) / x
-    ((¬1 =≠ value) × (y - 1)) A value
-}
-
-B ← {
-  0 B x: x ;
-  y B x:
-    oxy ← Epsil x
-    idx ← (≠⊑data) - y
-    value ← ((idx⊑oxy) = idx ⊑¨x) / x
-    ((¬1 =≠ value) × (y - 1)) B value
+Filter ← {
+  ⟨0, F⟩ Filter x: x ;
+  ⟨y, F⟩ Filter x:
+    idx ← (≠⊑x) - y
+    remaining ← ((idx ⊑ F x) = idx ⊑¨x) / x
+    ⟨(¬1 =≠ remaining) × (y - 1), F⟩ Filter remaining
 }
 
 •Out •Repr ×´ ParseBin¨ ⟨Gamma data, Epsil data⟩
 
-•Out •Repr ×´ ParseBin¨ ⊑¨ ⟨(≠⊑data) A data, (≠⊑data) B data⟩
+•Out •Repr ×´ ParseBin¨ ⊑¨ ⟨⟨≠⊑data, gamma⟩ Filter data, ⟨≠⊑data, epsil⟩ Filter data⟩
