@@ -8,26 +8,25 @@ ParseNat ← {
 
 ParseBingo ← {
   ! 6 = ≠ 𝕩
-  a ← ∾' '⊸strs.Split¨ 1 ↓ 𝕩
-  b ← ParseNat¨ (0≠≠¨a) / a 
+  b ← ParseNat¨ ((0≠≠¨) / ⊣) (∾' '⊸strs.Split¨ 1 ↓ 𝕩)
   ! 25 = ≠b
   ⟨5, 5⟩ ⥊ b
 }
 
 Steps ← {
   nums Steps board:
-    data ← ⟨5, 5⟩ ⥊ nums ⊐ (⟨25⟩ ⥊ board)
-    ⌊´ (⌈˝ data) ∾ (⌈˝˘ data)
+    whencalled ← nums ⊐ board
+    ⌊´ (⌈˝  ∾ ⌈˝˘) whencalled
 }
 
 Score ← {
-  nums Steps board:
-    data ← ⟨5, 5⟩ ⥊ nums ⊐ (⟨25⟩ ⥊ board)
+  nums Score board:
+    data ← nums ⊐ board
     used ← ¬(≠nums) = data 
-    col ← (5 = +˝used ) / board
+    col ← (5 = +˝ used) / board
     row ← (5 = +˝˘used) / board
     ! 1 = (≠ col) + (≠ row)
-    (⊑⌽nums) × +´⥊board × ¬used
+    (⊑ ⌽ nums) × +´ ⥊ board × ¬used
 }
 
 Subset ← {
@@ -35,8 +34,8 @@ Subset ← {
 }
 
 nums ← ParseNat¨ ',' strs.Split ⊑ data
-
 boards ← ParseBingo¨ Subset¨ ↕((≠data)-1) ÷ 6
+
 as ← nums⊸Steps¨ boards
 minsteps ← ⌊´ as
 maxsteps ← ⌈´ as
