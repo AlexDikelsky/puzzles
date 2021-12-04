@@ -23,7 +23,7 @@ Score ← {
   nums Score board:
     data ← nums ⊐ board
     used ← ¬(≠nums) = data 
-    col ← (5 = +˝ used) / board
+    col ← (5 = +˝ used) / ⍉board
     row ← (5 = +˝˘used) / board
     ! 1 = (≠ col) + (≠ row)
     (⊑ ⌽ nums) × +´ ⥊ board × ¬used
