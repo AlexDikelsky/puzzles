@@ -20,10 +20,9 @@ Steps ← {
     ⌊´ (⌈˝ data) ∾ (⌈˝˘ data)
 }
 
-Winning ← {
+Score ← {
   nums Steps board:
     data ← ⟨5, 5⟩ ⥊ nums ⊐ (⟨25⟩ ⥊ board)
-    min ← ⌊´ (⌈˝ data) ∾ (⌈˝˘ data)
     used ← ¬(≠nums) = data 
     col ← (5 = +˝used ) / board
     row ← (5 = +˝˘used) / board
@@ -35,11 +34,13 @@ Subset ← {
   ((1+6×𝕩) +↕6) ⊏ data
 }
 
-z ← Subset 2
-x ← ParseNat¨ ',' strs.Split ⊑ data
+nums ← ParseNat¨ ',' strs.Split ⊑ data
 
 boards ← ParseBingo¨ Subset¨ ↕((≠data)-1) ÷ 6
-as ← x⊸Steps¨ boards
+as ← nums⊸Steps¨ boards
 minsteps ← ⌊´ as
-sol_idx ← ⊑ as ⊐ minsteps
-•Show ((1+minsteps) ↑ x) Winning sol_idx ⊑ boards 
+maxsteps ← ⌈´ as
+sol1_idx ← ⊑ as ⊐ minsteps
+sol2_idx ← ⊑ as ⊐ maxsteps
+•Show ((1+minsteps) ↑ nums) Score sol1_idx ⊑ boards 
+•Show ((1+maxsteps) ↑ nums) Score sol2_idx ⊑ boards
