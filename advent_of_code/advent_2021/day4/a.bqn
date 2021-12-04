@@ -7,26 +7,16 @@ ParseNat ← {
 }
 
 ParseBingo ← {
-  ! 6 = ≠ 𝕩
-  b ← ParseNat¨ ((0≠≠¨) / ⊣) (∾' '⊸strs.Split¨ 1 ↓ 𝕩)
-  ! 25 = ≠b
-  ⟨5, 5⟩ ⥊ b
+  ⟨5, 5⟩ ⥊ ParseNat¨ ((0≠≠¨) / ⊣) (∾ ' ' strs.Split¨ 1 ↓ 𝕩)
 }
 
-Steps ← {
-  nums Steps board:
-    whencalled ← nums ⊐ board
-    ⌊´ (⌈˝  ∾ ⌈˝˘) whencalled
+Steps ← { nums Steps board:
+  ⌊´ (⌈˝  ∾ ⌈˝˘) (nums⊸⊐⌾⥊) board 
 }
 
-Score ← {
-  nums Score board:
-    data ← nums ⊐ board
-    used ← ¬(≠nums) = data 
-    col ← (5 = +˝ used) / ⍉board
-    row ← (5 = +˝˘used) / board
-    ! 1 = (≠ col) + (≠ row)
-    (⊑ ⌽ nums) × +´ ⥊ board × ¬used
+Score ← { nums Score board:
+  unused ← (≠nums) = (nums⊸⊐⌾⥊) board 
+  (⊑ ⌽ nums) × +´ ⥊ board × unused
 }
 
 Subset ← {
@@ -36,10 +26,10 @@ Subset ← {
 nums ← ParseNat¨ ',' strs.Split ⊑ data
 boards ← ParseBingo¨ Subset¨ ↕((≠data)-1) ÷ 6
 
-as ← nums⊸Steps¨ boards
-minsteps ← ⌊´ as
-maxsteps ← ⌈´ as
-sol1_idx ← ⊑ as ⊐ minsteps
-sol2_idx ← ⊑ as ⊐ maxsteps
+steps_per_board ← nums⊸Steps¨ boards
+minsteps ← ⌊´ steps_per_board
+maxsteps ← ⌈´ steps_per_board
+sol1_idx ← ⊑ steps_per_board ⊐ minsteps
+sol2_idx ← ⊑ steps_per_board ⊐ maxsteps
 •Show ((1+minsteps) ↑ nums) Score sol1_idx ⊑ boards 
 •Show ((1+maxsteps) ↑ nums) Score sol2_idx ⊑ boards
