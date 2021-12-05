@@ -8,7 +8,7 @@ ParseNat ← {
 ParseLine ← {
   ⟨a, bc, d⟩ ← ',' Split 𝕩
   ⟨b, arrow, c⟩ ← ' ' Split bc
-  (ParseNat¨ (a ⋈ b)) ⋈ (ParseNat¨ (c ⋈ d))
+  ParseNat¨¨ ⟨⟨a, b⟩, ⟨c, d⟩⟩
 }
 
 LineIncluding ← {
@@ -22,21 +22,11 @@ LineIncluding ← {
     LineIncluding ⟨⟨a, b⟩, ⟨c, d⟩⟩: (a < c) ∧ (b > d) ? LineIncluding ⟨⟨c, d⟩, ⟨a, b⟩⟩
 }
 
-# https://mathoverflow.net/questions/117390/polynomial-bijection-from-zxz-to-z
-Bij ← {
-  Bij ⟨n, m⟩: ((n+m) × (n+m+1) ÷ 2) + m
-}
-
-Mark ← { (1⊸+)⌾(𝕩⊸⊑) 𝕨 }
-
-HorizVert ← {
-    (+´ =´ 𝕩) > 0
-}
 data ← ParseLine¨ input
-p1_data ← (HorizVert¨ data) / data
 
-m1 ←  Bij¨ ∾ LineIncluding¨ p1_data
-m2 ←  Bij¨ ∾ LineIncluding¨ data
+Run ← {
+  +´ (((∊⌾⌽) × ⊒) ∾ LineIncluding¨ 𝕩) > 0
+}
 
-•Show +´ (((∊⌾⌽) × ⊒) m1) > 0
-•Show +´ (((∊⌾⌽) × ⊒) m2) > 0
+•Show Run (({𝕩 > 0}∘+´∘=´)¨ / ⊣) data
+•Show Run data
