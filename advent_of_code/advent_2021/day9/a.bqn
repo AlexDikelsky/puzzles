@@ -4,17 +4,22 @@ width ← ⊑ ≠¨ input
 height ← ≠ input
 data ← ⟨height, width⟩ ⥊ ∾input
 
-mins ← ⌊´ ⟨∞⊸»˘ data, ∞⊸«˘ data, (∞⊸«˘⌾⍉) data, (∞⊸»˘⌾⍉) data⟩
+min_locs ← (⌊´ ⟨∞⊸»˘ data, ∞⊸«˘ data, (∞⊸«˘⌾⍉) data, (∞⊸»˘⌾⍉) data⟩) > data
 
-•Show +´+˝ (mins > data) × (1 + data)
+•Show +´+˝ min_locs × (1 + data)
 
 _K_ ← {
-  𝔽˘ (𝔾˘ 𝕩) > 𝕩 
+  1⊸𝔽˘ ((∞⊸𝔾˘ 𝕩) > 𝕩)
 }
 
-# •Show data
-# •Show (mins > data) × data
-# •Show (((∞⊸«) _K_ (∞⊸»)) data) × data
-# •Show (((∞⊸») _K_ (∞⊸«)) data) × data
-# •Show (((∞⊸«⌾⍉) _K_ (∞⊸»⌾⍉)) data) × data
-# •Show (((∞⊸»⌾⍉) _K_ (∞⊸«⌾⍉)) data) × data
+# Below are (0,1) matricies
+# 0: the element to the _ is downhill
+# 1: the element to the _ is uphill
+# This has bugs I think
+right ← ((« _K_ ») data)
+left  ← ((» _K_ «) data)
+up    ← (((«⌾⍉) _K_ (»⌾⍉)) data)
+down  ← (((»⌾⍉) _K_ («⌾⍉)) data)
+
+•Show data
+•Show up
