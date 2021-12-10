@@ -3,12 +3,6 @@ data ← •file.Lines "data.txt"
 open ← "{<[("
 close ← "}>])"
 
-Score1 ← {
-  Score1 '}': 1197;
-  Score1 '>': 25137;
-  Score1 ']': 57;
-  Score1 ')': 3
-}
 
 Score2 ← {
   Score2 '(': 1;
@@ -18,13 +12,18 @@ Score2 ← {
   Score x: x ! 0
 }
 
-Score3 ← {
-  0 { ((5 × 𝕩) + Score2 𝕨) }´ 𝕩
+Score1 ← {
+  Score1 '>': 25137;
+  Score1 '}': 1197;
+  Score1 ']': 57;
+  Score1 ')': 3
 }
+
+Score3 ← {  𝕩 }
 
 Process1 ← {
   stack Process1 ⟨⟩: {
-    0 # Incomplete or fine
+    0
   };
   stack Process1 str: ⊑ (⊑ str) ∊ open ? {
     ((⊑ str) ∾ stack) Process1 1 ↓ str
@@ -43,10 +42,10 @@ Process1 ← {
 
 Process ← {
   ⟨⟩ Process ⟨⟩: {
-    ⟨⟩
+    0
   };
   stack Process ⟨⟩: {
-    stack
+    0 { ((5⊸× 𝕩) + Score2 𝕨) }´ ⌽ stack
   };
   stack Process str: ⊑ (⊑ str) ∊ open ? {
     ((⊑ str) ∾ stack) Process 1 ↓ str
@@ -55,14 +54,13 @@ Process ← {
     ⟨s, st⟩ ← (⊑⋈1⊸↓) stack
     ⟨x, xs⟩ ← (⊑⋈1⊸↓) str
 
-    ((close ⊐ x) ≡ (open ⊐ s))◶⟨⟨⟩, st Process xs⟩ @
+    ((close ⊐ x) ≡ (open ⊐ s))◶⟨0, st Process xs⟩ @
   };
   stack Process str: (⊑ (⊑ str) ∊ close) ∧ ((=stack) > 0) ? {
     ⟨x, xs⟩ ← (⊑⋈1⊸↓) str
-    ⟨⟩
+    0
   }
 }
 
 •Show +´ ⟨⟩⊸Process1¨ data
-z ← (0⊸≠ / ⊣) (∧ (Score3¨ ⌽¨ ⟨⟩⊸Process¨ data))
-•Show ((¯1 + ≠ z) ÷ 2) ⊑ z
+•Show ({2⊸(÷˜) ¯1 + ≠ 𝕩} ⊑ ⊢) (0⊸≠ / ⊢) (∧ ⟨⟩⊸Process¨ data)
