@@ -29,8 +29,6 @@ Iterate ← {
   prevnum Iterate mat: (+´+˝ 0 = mat) Iterate Color mat
 }
 
-# Map the minimum locations to reasonably large primes, then color until done
-# The primes have to be strictly greater than 4 because of the addition in Color
 # The primes store information about which section they are part of
-pmat ← 0 Iterate (((((0 ∾ 1 ↓ ∊)×⊣)+`)⌾⥊) min_locs) ⊏ 0 ∾ 2 ↓ primelist
-•Show ×´ 3 ↑ ∨ ≠¨ ⊔ (0⊸≠ / ⊢) ⥊ pmat
+pmat ← (((((0 ∾ 1 ↓ ∊)×⊣)+`)⌾⥊) min_locs) ⊏ 0 ∾ 2 ↓ primelist
+•Show ×´ 3 ↑ ∨ ≠¨ ⊔ (0⊸≠ / ⊢) ⥊ 0 Iterate pmat
