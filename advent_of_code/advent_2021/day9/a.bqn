@@ -1,3 +1,4 @@
+primes ← •Import "primes.bqn"
 input ← (•file.Lines "data.txt") - '0'
 
 width ← ⊑ ≠¨ input
@@ -8,18 +9,26 @@ min_locs ← (⌊´ ⟨∞⊸»˘ data, ∞⊸«˘ data, (∞⊸«˘⌾⍉) data
 
 •Show +´+˝ min_locs × (1 + data)
 
-_K_ ← {
-  1⊸𝔽˘ ((∞⊸𝔾˘ 𝕩) > 𝕩)
+wall ← data ≠ 9
+primelist ← primes.PrimesTo 100000
+
+FirstPrimeDividing ← {
+  z FirstPrimeDividing 0: 0; # Defining this here so the code below works better
+  ⟨⟩ FirstPrimeDividing n: "Primes list too small" ! 0 ;
+  primes FirstPrimeDividing n: 0 = (⊑ primes) | n ? {
+    ⊑ primes
+  };
+  primes FirstPrimeDividing n: {
+    (1 ↓ primes) FirstPrimeDividing n
+  }
 }
 
-# Below are (0,1) matricies
-# 0: the element to the _ is downhill
-# 1: the element to the _ is uphill
-# This has bugs I think
-right ← ((« _K_ ») data)
-left  ← ((» _K_ «) data)
-up    ← (((«⌾⍉) _K_ (»⌾⍉)) data)
-down  ← (((»⌾⍉) _K_ («⌾⍉)) data)
+Color ← {
+  Color visited: {
+    shifted ← +´ ⟨»˘ visited, «˘ visited, («˘⌾⍉) visited, (»˘⌾⍉) visited, visited⟩
+    shifted × wall
+  }
+}
 
-•Show data
-•Show up
+# Drop the first 5000 primes to make sure there aren't extra factors
+•Show (((((0 ∾ 1 ↓ ∊)×⊣)+`)⌾⥊) min_locs) ⊏ 0 ∾ 5000 ↓ primelist
