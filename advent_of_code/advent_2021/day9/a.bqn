@@ -12,23 +12,25 @@ min_locs ← (⌊´ ⟨∞⊸»˘ data, ∞⊸«˘ data, (∞⊸«˘⌾⍉) data
 wall ← data ≠ 9
 primelist ← primes.PrimesTo 100000
 
-FirstPrimeDividing ← {
-  z FirstPrimeDividing 0: 0; # Defining this here so the code below works better
-  ⟨⟩ FirstPrimeDividing n: "Primes list too small" ! 0 ;
-  primes FirstPrimeDividing n: 0 = (⊑ primes) | n ? {
-    ⊑ primes
-  };
-  primes FirstPrimeDividing n: {
-    (1 ↓ primes) FirstPrimeDividing n
-  }
+LargestFactor ← {
+  LargestFactor 0: 0;
+  LargestFactor n: ⌈´ primes.Factor n
 }
 
 Color ← {
   Color visited: {
     shifted ← +´ ⟨»˘ visited, «˘ visited, («˘⌾⍉) visited, (»˘⌾⍉) visited, visited⟩
-    shifted × wall
+    LargestFactor¨ shifted × wall
   }
 }
 
-# Drop the first 5000 primes to make sure there aren't extra factors
-•Show (((((0 ∾ 1 ↓ ∊)×⊣)+`)⌾⥊) min_locs) ⊏ 0 ∾ 5000 ↓ primelist
+Iterate ← {
+  prevnum Iterate mat: prevnum = +´+˝ 0 = 𝕩 ? mat;
+  prevnum Iterate mat: (+´+˝ 0 = mat) Iterate Color mat
+}
+
+# Map the minimum locations to reasonably large primes, then color until done
+# The primes have to be strictly greater than 4 because of the addition in Color
+# The primes store information about which section they are part of
+pmat ← 0 Iterate (((((0 ∾ 1 ↓ ∊)×⊣)+`)⌾⥊) min_locs) ⊏ 0 ∾ 2 ↓ primelist
+•Show ×´ 3 ↑ ∨ ≠¨ ⊔ (0⊸≠ / ⊢) ⥊ pmat
