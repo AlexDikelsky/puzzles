@@ -31,4 +31,7 @@ Iterate ← {
 
 # The primes store information about which section they are part of
 pmat ← (((((0 ∾ 1 ↓ ∊)×⊣)+`)⌾⥊) min_locs) ⊏ 0 ∾ 2 ↓ primelist
-•Show ×´ 3 ↑ ∨ ≠¨ ⊔ (0⊸≠ / ⊢) ⥊ 0 Iterate pmat
+o ← ∨ ≠¨ ⊔ (0⊸≠ / ⊢) ⥊ 0 Iterate pmat
+pmat2 ← (((((0 ∾ 1 ↓ ∊)×⊣)+`)⌾⥊) min_locs) ⊏ 0 ∾ 9 ↓ primelist
+p ← ∨ ≠¨ ⊔ (0⊸≠ / ⊢) ⥊ 0 Iterate pmat
+•Show o ≡ p
