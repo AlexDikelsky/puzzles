@@ -11,10 +11,12 @@ F ← {
 
 Iterate ← {
   Iterate ⟨flashed, vals, prev⟩: vals ≡ prev ? {
+    •Show +´+˝ flashed
     vals
   };
   Iterate ⟨flashed, vals, prev⟩: {
     m ← (vals ≥ 9) - flashed
+
 
     add_with ← ⟨
      »˘ m, 
@@ -35,4 +37,4 @@ G ← {
   F¨ Iterate ⟨height‿width ⥊ 0, 𝕩, height‿width ⥊ 0⟩
 }
 
-•Show G⍟10 data
+G⍟100 data
