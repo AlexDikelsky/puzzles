@@ -1,8 +1,5 @@
 input ← (•file.Lines "data.txt") - '0'
-width ←  ⊑ ≠¨ input
-height ← ≠ input
-
-data ← ⟨height, width⟩ ⥊ ∾ input
+data ← > input
 
 F ← {
   F x: x ≥ 9 ? 0;
@@ -10,12 +7,9 @@ F ← {
 }
 
 Iterate ← {
-  Iterate ⟨flashed, vals, prev⟩: vals ≡ prev ? {
-    vals
-  };
+  Iterate ⟨flashed, vals, prev⟩: vals ≡ prev ? vals ;
   Iterate ⟨flashed, vals, prev⟩: {
     m ← (vals ≥ 9) - flashed
-
     add_with ← ⟨
      »˘ m, «˘ m, 
      («˘⌾⍉) m, 
@@ -29,12 +23,14 @@ Iterate ← {
   }
 }
 
+zero ← 0 × data
+
 Step ← {
-  F¨ Iterate ⟨height‿width ⥊ 0, 𝕩, height‿width ⥊ 0⟩
+  F¨ Iterate ⟨zero, 𝕩, zero⟩
 }
 
 FindZeros ← {
-  n FindZeros data: data ≡ height‿width ⥊ 0 ? n;
+  n FindZeros data: data ≡ zero ? n;
   n FindZeros data: (n + 1) FindZeros (Step data)
 }
 
