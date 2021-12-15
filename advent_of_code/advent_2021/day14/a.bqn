@@ -17,7 +17,7 @@ UnHash ← {
 
 Split ← {
   𝕊 ⟨⟨a, b⟩, c⟩:
-    ⟨Hash ⟨a, c⟩,  Hash ⟨c, b⟩⟩
+    ⟨⟨a, c⟩, ⟨c, b⟩⟩
 }
 
 len ← Hash "ZZ"
@@ -27,14 +27,27 @@ len ← Hash "ZZ"
 
 startmap ← /⁼ (∧ Hash˘ 2 ↕ startstr) ∾ len
 
+AddAtIdxs ← {
+  map 𝕊 ⟨is, n⟩:
+    (n⊸+)⌾(is⊸⊏) map
+}
+
 Step ← {
   𝕊 map:
-    toapply ← ((Hash¨ keys) ⊏ map) / subs
-    /⁼ ∧ len ∾ ∾ Split¨ toapply
+    applytimes ← (Hash¨ keys) ⊏ map
+    toapply ← applytimes / subs
+
+    splitcounts ← (Hash¨ Split¨ subs) ⋈¨ applytimes
+    # •Show map⊸AddAtIdxs¨ splitcounts
+    # •Show splitcounts
+
+    z ← /⁼ ∧ len ∾ ∾ Hash¨ Split¨ toapply
+    # •Show z
+    z
 }
 
 indices ← ⊑¨ UnHash¨ / (1⊸↓⌾⌽)  Step⍟10 startmap
 
-maxes ← (0⊸≠ / { 𝕩 ⋈˜¨ 'A' + ↕≠𝕩 }) ≠¨ ⊔ ((¯1 ⊑ startstr) ∾ indices) - 'A'
-⟨k, v⟩ ← (⊑¨ ⋈ 1⊸⊑¨) maxes
-•Show (⌈´ v) - (⌊´ v)
+# maxes ← (0⊸≠ / { 𝕩 ⋈˜¨ 'A' + ↕≠𝕩 }) ≠¨ ⊔ ((¯1 ⊑ startstr) ∾ indices) - 'A'
+# ⟨k, v⟩ ← (⊑¨ ⋈ 1⊸⊑¨) maxes
+# •Show (⌈´ v) - (⌊´ v)
