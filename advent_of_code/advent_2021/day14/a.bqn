@@ -17,22 +17,25 @@ UnHash ← {
 
 Split ← {
   𝕊 ⟨⟨a, b⟩, c⟩:
-    ⟨Hash ⟨a, b⟩,  Hash ⟨c, b⟩⟩
+    ⟨Hash ⟨a, c⟩,  Hash ⟨c, b⟩⟩
 }
-
-Step ← {
-  𝕊 str:
-}
-
 
 len ← Hash "ZZ"
 count ← ↕ len + 1
-table ← 0¨count
 
 # Assert this hash works
 ! ((UnHash¨ Hash¨) ≡ ⊣) ⊑¨ subs 
 
 startmap ← /⁼ (∧ Hash˘ 2 ↕ startstr) ∾ len
 
-# could be really bad, we'll see
-•Show /⁼ ∧ ∾ Split¨ (((Hash¨ keys) ⊏ startmap) / subs)
+Step ← {
+  𝕊 map:
+    toapply ← ((Hash¨ keys) ⊏ map) / subs
+    (/⁼ ∧ len ∾ ∾ Split¨ toapply)
+}
+
+ToLetter ← {𝕩 > 1} / {('A' + ↕26) ⋈¨  𝕩} ≠¨ ⊔ 
+
+•Show 2↕ startstr
+
+•Show ((Hash¨ keys) ⊐ (Hash˘ (2 ↕ startstr)))
