@@ -21,7 +21,6 @@ Split ← {
 }
 
 len ← Hash "ZZ"
-count ← ↕ len + 1
 
 # Assert this hash works
 ! ((UnHash¨ Hash¨) ≡ ⊣) ⊑¨ subs 
@@ -31,11 +30,11 @@ startmap ← /⁼ (∧ Hash˘ 2 ↕ startstr) ∾ len
 Step ← {
   𝕊 map:
     toapply ← ((Hash¨ keys) ⊏ map) / subs
-    (/⁼ ∧ len ∾ ∾ Split¨ toapply)
+    /⁼ ∧ len ∾ ∾ Split¨ toapply
 }
 
-ToLetter ← {𝕩 > 1} / {('A' + ↕26) ⋈¨  𝕩} ≠¨ ⊔ 
+indices ← ⊑¨ UnHash¨ / (1⊸↓⌾⌽)  Step⍟10 startmap
 
-•Show 2↕ startstr
-
-•Show ((Hash¨ keys) ⊐ (Hash˘ (2 ↕ startstr)))
+maxes ← (0⊸≠ / { 𝕩 ⋈˜¨ 'A' + ↕≠𝕩 }) ≠¨ ⊔ ((¯1 ⊑ startstr) ∾ indices) - 'A'
+⟨k, v⟩ ← (⊑¨ ⋈ 1⊸⊑¨) maxes
+•Show (⌈´ v) - (⌊´ v)
