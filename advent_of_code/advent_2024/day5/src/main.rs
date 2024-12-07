@@ -1,13 +1,13 @@
+use itertools::Itertools;
 use std::collections::HashMap;
 use std::fs;
-use std::iter;
 
 type T = (usize, usize);
 
 fn main() {
     let file_in = fs::read_to_string("data.txt").unwrap();
     let m = file_in.split("\n\n").collect::<Vec<&str>>();
-    let rules: Vec<(usize, usize)> = m[0]
+    let mut rules: Vec<(usize, usize)> = m[0]
         .lines()
         .map(|l| {
             let z = l
@@ -25,17 +25,15 @@ fn main() {
 
     dbg!(&m);
     dbg!(&rules);
-    dbg!(&order);
+    dbg!(&make_map(&mut rules));
 }
 
-fn make_map(r: Vec<T>) -> HashMap<usize, Vec<usize>> {
-    let mut m: HashMap<usize, Box<dyn Iterator<Item = usize>>> = HashMap::new();
+fn make_map(r: &mut Vec<T>) -> HashMap<usize, Vec<usize>> {
+    r.sort();
+    let mut grouped: HashMap<usize, Vec<usize>> = HashMap::new();
 
-    r.into_iter().for_each(|(k, v)| {
-        match m.get(&k) {
-             Some(val) => { m[&k].chain(iter::once(v)); },
-             None => {m.insert(k, Box::new(iter::once(v)));}
-        }
-    });
-    m.into_iter().map(|(k,v)| (k, v.collect::<Vec<usize>>())).collect()
+    for (key, chunk) in &r.into_iter().chunk_by(|elt| elt.0) {
+        grouped.insert(key, chunk.map(|x| x.1).collect());
+    }
+    grouped
 }
