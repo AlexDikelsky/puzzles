@@ -8,7 +8,7 @@ use std::iter;
 type T = (usize, usize);
 
 fn main() {
-    let file_in = fs::read_to_string("data.txt").unwrap();
+    let file_in = fs::read_to_string("data2.txt").unwrap();
     let m = file_in.split("\n\n").collect::<Vec<&str>>();
     let mut rules: Vec<(usize, usize)> = m[0]
         .lines()
@@ -28,14 +28,16 @@ fn main() {
 
     let s = &make_map(&mut rules);
     let good: Vec<_> = order.iter().filter(|o| check(&s, o)).collect();
+    let bad: Vec<_> = order.iter().filter(|o| !check(&s, o)).collect();
 
-    dbg!(good.iter().all(|r| find_first(&s, r) == r[0]));
-
+    // dbg!(good.iter().all(|r| find_first(&s, r) == r[0]));
     dbg!(good.iter().all(|r| order_l(&s, r) == **r));
 
-    // dbg!(order.iter().map(|r| order_l(&s, r)).collect_vec());
-    // dbg!(good.into_iter().map(middle).sum::<usize>());
+    order.iter().map(|r| order_l(&s, r)).collect_vec();
+    dbg!(good.into_iter().map(middle).sum::<usize>());
+    dbg!(bad.into_iter().map(|a| order_l(&s, &a)).map(middle2).sum::<usize>());
 }
+// too high 10436
 
 fn make_map(r: &mut Vec<T>) -> HashMap<usize, HashSet<usize>> {
     r.sort();
@@ -55,7 +57,8 @@ fn middle<T: Copy>(v: &Vec<T>) -> T {
     v[v.len() / 2]
 }
 
-fn middle2<T: Copy>(v: &Vec<T>) -> T {
+fn middle2<T: Copy>(v: Vec<T>) -> T {
+    assert!(v.len()% 2 == 1);
     v[v.len() / 2]
 }
 
@@ -76,14 +79,23 @@ fn check(r: &HashMap<usize, HashSet<usize>>, o: &Vec<usize>) -> bool {
 }
 
 fn find_first(r: &HashMap<usize, HashSet<usize>>, o: &Vec<usize>) -> usize {
-    *o.into_iter()
+    let results = o
+        .into_iter()
         .filter(|n| {
             o.into_iter()
                 .all(|k| *n == k || r.get(n).map(|x| x.contains(k)).unwrap_or(true))
-  
         })
-        .exactly_one()
-        .expect(&format!("Constraint violated ☹️  {:?} ", &o))
+        .collect_vec();
+    match results.len() {
+        0 => panic!("No items ?"),
+        1 => *results[0],
+        _ => {dbg!(&results); 
+          *results
+            .into_iter()
+            .filter(|n| r.get(n).is_some())
+            .exactly_one()
+            .unwrap()},
+    }
 }
 
 fn order_l(r: &HashMap<usize, HashSet<usize>>, o: &Vec<usize>) -> Vec<usize> {
