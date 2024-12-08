@@ -3,6 +3,8 @@ use crate::Terrain::*;
 use itertools::FoldWhile::{Continue, Done};
 use itertools::Itertools;
 use std::fs;
+use std::collections::HashSet;
+use std::iter;
 
 #[derive(Debug, Copy, Clone)]
 enum Heading {
@@ -31,20 +33,20 @@ struct D {
 }
 
 impl D {
-    fn right(&self, h: Heading) -> (Heading, Option<Terrain>) {
-        match h {
-            N => (E, self.east),
-            S => (W, self.west),
-            E => (S, self.south),
-            W => (N, self.north),
-        }
-    }
     fn forward(&self, h: Heading) -> (Heading, Option<Terrain>) {
         match h {
             N => (N, self.north),
             S => (S, self.south),
             E => (E, self.east),
             W => (W, self.west),
+        }
+    }
+    fn right(&self, h: Heading) -> (Heading, Option<Terrain>) {
+        match h {
+            N => (E, self.east),
+            S => (W, self.west),
+            E => (S, self.south),
+            W => (N, self.north),
         }
     }
 }
@@ -73,27 +75,26 @@ fn main() {
     let person = (N, person);
 
     dbg!(surr(&m, (N, (0, 0))));
-    // dbg!(surr(&m, (N, (3, 0))));
-    // dbg!(surr(&m, (N, (1, 1))));
-    // dbg!(next(&m, (E, (3, 0))));
-    // dbg!(next(&m, (W, (0, 0))));
 
-    // dbg!(person);
-
-    let z = (0..).fold_while(person, |acc, _| {
-       dbg!(&acc);
+    let z = (0..).fold_while((person, HashSet::new()), |(acc, set), _| {
+       // dbg!(&acc);
        match next(&m, acc) {
-          None => Done(acc),
-          Some((_, None)) => Done(acc),
+          None => Done((acc, set)),
+          Some((_, None)) => Done((acc, set)),
           Some((_, Some(Wall(_, _)))) => panic!("Ran through wall"),
-          Some((heading, Some(Empty(ny, nx)))) => Continue((heading, (ny, nx))),
+          Some((heading, Some(Empty(ny, nx)))) => Continue(((heading, (ny, nx)), a(set, (ny, nx)))),
        }
     }).into_inner();
     
+    dbg!(z.1.len());
+}
+
+fn a(s: HashSet<Po>, v: Po) -> HashSet<Po> {
+  s.into_iter().chain(iter::once(v)).collect()
 }
 
 fn surr(m: &M, p: P) -> D {
-    let (_, (x, y)) = p;
+    let (_, (y, x)) = p;
     D {
         north: y
             .checked_sub(1)
