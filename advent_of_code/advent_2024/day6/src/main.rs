@@ -5,8 +5,10 @@ use itertools::Itertools;
 use std::collections::HashSet;
 use std::fs;
 use std::iter;
+use std::hash::Hash;
+use std::cmp::Eq;
 
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Copy, Clone, Eq, Hash, PartialEq)]
 enum Heading {
     N,
     S,
@@ -20,8 +22,6 @@ enum Terrain {
     Wall,
 }
 
-type Po = (usize, usize);
-type P = (Heading, Po);
 type M = Vec<Vec<Terrain>>;
 
 #[derive(Debug, Copy, Clone)]
@@ -31,6 +31,13 @@ struct D {
     east: Option<Terrain>,
     west: Option<Terrain>,
 }
+
+#[derive(Debug, Copy, Clone, Eq, PartialEq, Hash)]
+struct P {
+    heading: Heading,
+    coord: (usize, usize),
+}
+
 
 impl D {
     fn forward(&self, h: Heading) -> (Heading, Option<Terrain>) {
@@ -72,33 +79,41 @@ fn main() {
                 .collect_vec()
         })
         .collect_vec();
-    let person = (N, person);
+    let person = P { heading: N, coord: person };
 
-    dbg!(surr(&m, (N, (0, 0))));
+    // dbg!(surr(&m, (N, (0, 0))));
 
-    let z = (0..)
+    dbg!(full_path(person, &m).into_iter().map(|p| p.coord).collect::<HashSet<(usize, usize)>>().len());
+}
+
+fn a<T: Copy + Hash + Eq>(s: HashSet<T>, v: T) -> HashSet<T> {
+    s.into_iter().chain(iter::once(v)).collect()
+}
+
+fn full_path(person: P, m: &M) -> HashSet<P> {
+    (0..)
         .fold_while(
-            (person, vec![person.1].into_iter().collect()),
+            (person, iter::once(person).collect()),
             |(acc, set), _| match next(&m, acc) {
                 None => Done((acc, set)),
                 Some((_, None)) => Done((acc, set)),
                 Some((_, Some(Wall))) => panic!("Ran through wall"),
                 Some((heading, Some(Empty(ny, nx)))) => {
-                    Continue(((heading, (ny, nx)), a(set, (ny, nx))))
+                    let p = P{heading: heading, coord: (ny, nx)};
+                    Continue((p, a(set, p)))
                 }
             },
         )
-        .into_inner();
-
-    dbg!(z.1.len());
+        .into_inner()
+        .1
 }
 
-fn a(s: HashSet<Po>, v: Po) -> HashSet<Po> {
-    s.into_iter().chain(iter::once(v)).collect()
+fn is_loop(before: &HashSet<P>, now: &P) -> bool {
+    before.contains(now)
 }
 
 fn surr(m: &M, p: P) -> D {
-    let (_, (y, x)) = p;
+    let (y, x) = p.coord;
     D {
         north: y
             .checked_sub(1)
@@ -116,7 +131,7 @@ fn surr(m: &M, p: P) -> D {
 }
 
 fn next(m: &M, p: P) -> Option<(Heading, Option<Terrain>)> {
-    let (h, _) = p;
+    let h = p.heading;
     let s = surr(m, p);
     let next_location = match h {
         N => s.north,
